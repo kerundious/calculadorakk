@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Calculadora Tibia</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(135deg,#0b0c1a,#1f1f3a,#2a2a4a);
+    color:#f0f0f0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:20px;
+    margin:0;
+}
+
+h1 {
+    font-size:28px;
+    margin-bottom:25px;
+    text-align:center;
+    text-shadow:2px 2px 6px #000;
+}
+
+.container {
+    background: rgba(20,20,40,0.95);
+    padding:20px;
+    border-radius:20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    width:700px;
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+h2 {
+    font-size:22px;
+    margin-bottom:12px;
+    border-bottom:2px solid rgba(255,255,255,0.3);
+    padding-bottom:4px;
+}
+
+.row {
+    display:flex;
+    gap:15px;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+label {
+    min-width:180px;
+    font-weight:600;
+    font-size:14px;
+}
+
+input {
+    padding:10px 14px;
+    border-radius:12px;
+    border:none;
+    font-size:14px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+    font-weight:600;
+    text-align:right;
+    flex:1;
+    max-width:130px;
+    height:38px;
+    transition: all 0.2s;
+}
+
+input:focus {
+    outline:none;
+    box-shadow:0 0 12px #66ff88;
+    background: rgba(255,255,255,0.15);
+}
+
+.button-row {
+    display:flex;
+    gap:20px;
+    justify-content:center;
+    flex-wrap:wrap;
+    perspective:1000px;
+}
+
+.calc-card {
+    color:#fff;
+    font-weight:bold;
+    font-size:16px;
+    padding:16px 22px;
+    border-radius:18px;
+    cursor:pointer;
+    box-shadow:0 5px 12px rgba(0,0,0,0.6);
+    transition: all 0.3s;
+    text-align:center;
+    min-width:180px;
+    transform-style: preserve-3d;
+}
+
+.calc-card:hover {
+    transform: rotateX(5deg) rotateY(5deg) scale(1.03);
+    box-shadow:0 8px 22px rgba(0,0,0,0.7);
+}
+
+.calc-market {
+    background: linear-gradient(135deg,#27ae60,#2ecc71);
+}
+.calc-item {
+    background: linear-gradient(135deg,#e67e22,#f39c12);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow:0 5px 12px rgba(0,0,0,0.6);}
+    50% { transform: scale(1.03); box-shadow:0 8px 22px rgba(0,0,0,0.7);}
+    100% { transform: scale(1); box-shadow:0 5px 12px rgba(0,0,0,0.6);}
+}
+
+.pulse-1 { animation: pulse 2s ease-in-out infinite; }
+.pulse-2 { animation: pulse 2s ease-in-out 0.5s infinite; }
+
+.resultadoValor {
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    justify-content:center;
+    margin-top:10px;
+}
+
+.valor-box {
+    flex:1 1 120px;
+    background: rgba(255,255,255,0.08);
+    padding:12px;
+    border-radius:14px;
+    font-size:14px;
+    line-height:1.4;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);
+    text-align:center;
+    transition: transform 0.2s;
+}
+
+.valor-box span { display:block; font-weight:bold; margin-bottom:4px; }
+
+.valor-box:hover { transform: translateY(-1px); }
+
+.valor-destaque {
+    flex:2 1 100%;
+    background: linear-gradient(-45deg,#FFD700,#FFA500,#FFFF66,#FFDD00);
+    background-size:400% 400%;
+    animation: gradientAnim 5s ease infinite;
+    color:#000;
+    font-size:22px;
+    font-weight:800;
+    padding:14px;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 5px 18px rgba(0,0,0,0.7);
+    margin-top:8px;
+}
+
+@keyframes gradientAnim {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+}
+
+.resultadoLucro {
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+.resultadoLucro .diario, .resultadoLucro .semanal, .resultadoLucro .mensal {
+    color:#fff; 
+    padding:14px; 
+    border-radius:16px; 
+    font-weight:bold; 
+    flex:1; 
+    text-align:center; 
+    font-size:15px;
+    transition: all 0.5s;
+}
+
+.resultadoLucro .diario { background: linear-gradient(90deg,#2ecc71,#27ae60);}
+.resultadoLucro .semanal { background: linear-gradient(90deg,#3498db,#2980b9);}
+.resultadoLucro .mensal { background: linear-gradient(90deg,#9b59b6,#8e44ad);}
+
+.tempoItem {
+    flex:1 1 100%;
+    background: rgba(230,126,34,0.15);
+    color:#fff;
+    padding:16px;
+    border-radius:18px;
+    font-weight:bold;
+    font-size:16px;
+    text-align:center;
+    box-shadow:0 3px 12px rgba(0,0,0,0.4);
+    line-height:2;
+    margin-top:10px;
+}
+
+.hidden { display:none; }
+
+@media (max-width:750px){
+    .container{width:95%;}
+    .row{flex-direction:column;}
+    input{width:100%; max-width:100%;}
+    .valor-destaque{font-size:20px;}
+    .calc-card{width:100%; font-size:16px;}
+}
+</style>
+</head>
+<body>
+
+<h1>Calculadora Tibia</h1>
+
+<div class="container">
+
+    <h2>Escolha a Calculadora</h2>
+    <div class="button-row">
+        <div class="calc-card calc-market pulse-1" id="btnMarket">💎 Calculadora KK</div>
+        <div class="calc-card calc-item pulse-2" id="btnItem">🪙 Valores dos Itens</div>
+    </div>
+
+    <!-- Calculadora Market -->
+    <div id="calcMarket">
+        <h2>💎 Calculadora KK</h2>
+        <div class="row">
+            <label for="precoTC">💰 Preço de 250 TC:</label>
+            <input type="text" id="precoTC" value="56">
+        </div>
+        <div class="row">
+            <label for="goldPorTC">🪙 Gold por 1 TC:</label>
+            <input type="text" id="goldPorTC" value="40.000">
+        </div>
+
+        <div class="valor-destaque" id="valor1kk">🏆 Valor de 1kk farmado: R$ 5,60</div>
+
+        <div class="resultadoValor" id="detalhesMarket"></div>
+
+        <h2>⚡ Lucro Diário</h2>
+        <div class="row">
+            <label for="farmDia">🧾 KK farmado no dia:</label>
+            <input type="text" id="farmDia" value="1">
+        </div>
+        <div class="resultado resultadoLucro" id="resultadoLucro"></div>
+    </div>
+
+    <!-- Calculadora Item -->
+    <div id="calcItem" class="hidden">
+        <h2>🪙 Valores dos Itens / Tempo para farmar</h2>
+        <div class="row">
+            <label for="itemGold">💎 Valor do Item (GC):</label>
+            <input type="text" id="itemGold" value="300.000.000">
+        </div>
+        <div class="tempoItem" id="tempoItem">
+            <div style="margin-bottom:12px;">💰 Valor do item: R$ 1.680,00</div>
+            <div>⏱️ Tempo para farmar: 1680,0 dias</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Cards animados
+const btnMarket = document.getElementById('btnMarket');
+const btnItem = document.getElementById('btnItem');
+const calcMarket = document.getElementById('calcMarket');
+const calcItem = document.getElementById('calcItem');
+
+btnMarket.addEventListener('click', ()=>{
+    calcMarket.classList.remove('hidden');
+    calcItem.classList.add('hidden');
+});
+btnItem.addEventListener('click', ()=>{
+    calcItem.classList.remove('hidden');
+    calcMarket.classList.add('hidden');
+    atualizarItem();
+});
+
+// Formatação
+function formatNumber(n){
+    return parseFloat(n).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function formatGC(n){
+    return parseInt(n).toLocaleString('pt-BR');
+}
+
+function formatInputNumber(input){
+    input.addEventListener('input', ()=>{
+        let value = input.value.replace(/\D/g,'');
+        if(value==='') value='0';
+        input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+        atualizarValores();
+        atualizarLucro();
+        atualizarItem();
+    });
+}
+['precoTC','goldPorTC','farmDia','itemGold'].forEach(id=>{
+    formatInputNumber(document.getElementById(id));
+});
+
+// Market
+const precoTCInput = document.getElementById('precoTC');
+const goldPorTCInput = document.getElementById('goldPorTC');
+const valor1kkDiv = document.getElementById('valor1kk');
+const detalhesMarketDiv = document.getElementById('detalhesMarket');
+const farmDiaInput = document.getElementById('farmDia');
+const resultadoLucroDiv = document.getElementById('resultadoLucro');
+let valorKKAtual = 5.60;
+
+// Animação contagem suave
+function animateValue(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const value = start + (end - start) * progress;
+        element.textContent = `🏆 Valor de 1kk farmado: R$ ${formatNumber(value)}`;
+        if (progress < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+}
+
+// Animação contagem para lucro diário, semanal, mensal
+function animateValueBox(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const value = start + (end - start) * progress;
+        element.textContent = element.dataset.prefix + formatNumber(value);
+        if(progress < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+}
+
+function parseInput(input){
+    return parseFloat(input.replace(/\./g,'')) || 0;
+}
+
+function atualizarValores(){
+    const precoTC = parseInput(precoTCInput.value);
+    const goldPorTC = parseInput(goldPorTCInput.value);
+    const goldFarmado = 1000000;
+    const tcBase = 250;
+
+    if(precoTC<=0 || goldPorTC<=0){
+        detalhesMarketDiv.innerHTML="Preencha todos os campos corretamente.";
+        return;
+    }
+
+    const valorPorTC = precoTC/tcBase;
+    const tcEquivalente = goldFarmado/goldPorTC;
+    const novoValorKK = tcEquivalente*valorPorTC;
+    animateValue(valor1kkDiv, valorKKAtual, novoValorKK, 500); // animação 0.5s
+    valorKKAtual = novoValorKK;
+
+    const gold25TC = goldPorTC*25;
+    const gold250TC = goldPorTC*250;
+
+    detalhesMarketDiv.innerHTML=`
+        <div class="valor-box"><span>💰 Valor de 1 TC</span>R$ ${formatNumber(valorPorTC)}</div>
+        <div class="valor-box"><span>🛒 25 TC no market</span>${formatGC(gold25TC)} GC</div>
+        <div class="valor-box"><span>🛒 250 TC no market</span>${formatGC(gold250TC)} GC</div>
+    `;
+
+    atualizarLucro();
+}
+
+function atualizarLucro(){
+    const farmDia = parseInput(farmDiaInput.value);
+    if(farmDia<=0){
+        resultadoLucroDiv.innerHTML="Preencha corretamente.";
+        return;
+    }
+
+    const lucroDia = farmDia*valorKKAtual;
+    const lucroSemana = lucroDia*7;
+    const lucroMes = lucroDia*30;
+
+    resultadoLucroDiv.innerHTML=`
+        <div class="diario" data-prefix="💸 Diário: R$ ">${formatNumber(lucroDia)}</div>
+        <div class="semanal" data-prefix="📅 Semanal: R$ ">${formatNumber(lucroSemana)}</div>
+        <div class="mensal" data-prefix="🗓️ Mensal: R$ ">${formatNumber(lucroMes)}</div>
+    `;
+
+    // animação contagem suave
+    const diarioDiv = resultadoLucroDiv.querySelector('.diario');
+    const semanalDiv = resultadoLucroDiv.querySelector('.semanal');
+    const mensalDiv = resultadoLucroDiv.querySelector('.mensal');
+
+    animateValueBox(diarioDiv, parseFloat(diarioDiv.textContent.replace(/\D/g,'')), lucroDia, 500);
+    animateValueBox(semanalDiv, parseFloat(semanalDiv.textContent.replace(/\D/g,'')), lucroSemana, 500);
+    animateValueBox(mensalDiv, parseFloat(mensalDiv.textContent.replace(/\D/g,'')), lucroMes, 500);
+}
+
+atualizarValores();
+
+// Item
+const itemGoldInput = document.getElementById('itemGold');
+const tempoItemDiv = document.getElementById('tempoItem');
+
+function atualizarItem(){
+    const itemGC = parseInput(itemGoldInput.value);
+    if(itemGC<=0){
+        tempoItemDiv.innerHTML = "💰 Valor do item: Preencha corretamente";
+        return;
+    }
+
+    const farmDia = parseInput(farmDiaInput.value);
+    if(farmDia<=0){
+        tempoItemDiv.innerHTML = `<div style="margin-bottom:12px;">💰 Valor do item: R$ ${formatNumber((itemGC/1000000)*valorKKAtual)}</div>
+                                   <div>⏱️ Tempo para farmar: Preencha KK diário</div>`;
+        return;
+    }
+
+    const valorItem = (itemGC/1000000)*valorKKAtual;
+    const diasParaItem = valorItem/farmDia;
+    tempoItemDiv.innerHTML = `<div style="margin-bottom:12px;">💰 Valor do item: R$ ${formatNumber(valorItem)}</div>
+                              <div>⏱️ Tempo para farmar: ${diasParaItem.toFixed(1)} dias</div>`;
+}
+
+itemGoldInput.addEventListener('input',atualizarItem);
+farmDiaInput.addEventListener('input',()=>{
+    atualizarItem();
+    atualizarLucro();
+});
+</script>
+</body>
+</html>
